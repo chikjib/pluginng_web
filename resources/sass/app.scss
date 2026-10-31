@@ -1,0 +1,11 @@
+// The existing Blade layouts provide the Bootstrap theme.
+// Keep application-specific styles here instead of loading a second Bootstrap version.
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+.pluginng-toasts { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 11000; display: grid; gap: 8px; width: min(90vw, 480px); pointer-events: none; }
+.pluginng-toast { padding: 12px 18px; border-radius: 6px; background: #323232; color: white; box-shadow: 0 3px 12px #0003; overflow-wrap: anywhere; }
+.loading-skeleton { padding: 16px 0; }
+.loading-skeleton-row { display: flex; gap: 16px; margin-bottom: 16px; }
+.loading-skeleton-cell { flex: 1; height: 18px; border-radius: 4px; background: #e4e7eb; animation: loading-pulse 1.2s ease-in-out infinite alternate; }
+@keyframes loading-pulse { to { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .loading-skeleton-cell { animation: none; } }

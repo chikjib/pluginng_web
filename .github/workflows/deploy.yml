@@ -1,0 +1,127 @@
+name: Deploy Pluginng to cPanel
+
+# Pushes run validate.yml. This major upgrade must be deployed deliberately
+# after a staging rehearsal and a verified external database/files backup.
+on:
+  workflow_dispatch:
+    inputs:
+      backup_confirmed:
+        description: "I tested staging, verified backups, reviewed pending migrations, and paused cron/workers"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pluginng-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml
+
+  deploy:
+    if: inputs.backup_confirmed
+    needs: validate
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+    env:
+      CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+      CPANEL_USER: ${{ secrets.CPANEL_USER }}
+      CPANEL_PORT: ${{ secrets.CPANEL_PORT }}
+      CPANEL_PATH: ${{ secrets.CPANEL_PATH }}
+      CPANEL_SSH_KEY: ${{ secrets.CPANEL_SSH_KEY }}
+      CPANEL_KNOWN_HOSTS: ${{ secrets.CPANEL_KNOWN_HOSTS }}
+      CPANEL_PHP: ${{ vars.CPANEL_PHP || '/opt/cpanel/ea-php84/root/usr/bin/php' }}
+      VITE_APP_URL: ${{ vars.VITE_APP_URL || vars.MIX_APP_URL }}
+      VITE_APP_NAME: ${{ vars.VITE_APP_NAME || vars.MIX_APP_NAME }}
+      VITE_SESSION_LIFETIME: ${{ vars.VITE_SESSION_LIFETIME || vars.MIX_SESSION_LIFETIME }}
+      VITE_RAVE_PUBLICKEY: ${{ vars.VITE_RAVE_PUBLICKEY || vars.MIX_RAVE_PUBLICKEY }}
+      VITE_GOOGLE_MAP_API_KEY: ${{ vars.VITE_GOOGLE_MAP_API_KEY || vars.MIX_GOOGLE_MAP_API_KEY }}
+      VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY || vars.MIX_FIREBASE_API_KEY }}
+      VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID || vars.MIX_FIREBASE_APP_ID }}
+      VITE_PUSHER_APP_KEY: ${{ vars.VITE_PUSHER_APP_KEY || vars.MIX_PUSHER_APP_KEY }}
+      VITE_PUSHER_APP_CLUSTER: ${{ vars.VITE_PUSHER_APP_CLUSTER || vars.MIX_PUSHER_APP_CLUSTER }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check deployment configuration
+        shell: bash
+        run: |
+          for name in CPANEL_HOST CPANEL_USER CPANEL_PORT CPANEL_PATH CPANEL_SSH_KEY CPANEL_KNOWN_HOSTS CPANEL_PHP VITE_APP_URL VITE_APP_NAME VITE_SESSION_LIFETIME; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing deployment configuration: $name"
+              exit 1
+            fi
+          done
+          [[ "$CPANEL_PATH" == /* && "$CPANEL_PATH" != / ]]
+          [[ "$CPANEL_PHP" == /* ]]
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          tools: composer:v2
+          coverage: none
+          extensions: mbstring, bcmath, curl, dom, fileinfo, gd, intl, pdo_mysql, sodium, xml, zip
+      - name: Install locked production dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+      - name: Verify application boots without development dependencies
+        run: |
+          composer check-platform-reqs --no-dev
+          php artisan package:discover --env=testing --ansi
+          php artisan --version
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: |
+          npm run build
+          php scripts/check-vite-build.php
+      - name: Configure verified SSH host
+        shell: bash
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$CPANEL_SSH_KEY" | tr -d '\r' > "$HOME/.ssh/pluginng_deploy"
+          chmod 600 "$HOME/.ssh/pluginng_deploy"
+          printf '%s\n' "$CPANEL_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+      - name: Check server, save code rollback archive, and enable maintenance
+        shell: bash
+        run: |
+          printf -v arguments '%q ' "$CPANEL_PATH" "$CPANEL_PHP"
+          ssh -i "$HOME/.ssh/pluginng_deploy" -p "$CPANEL_PORT" \
+            -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "$CPANEL_USER@$CPANEL_HOST" "bash -s -- $arguments" < scripts/deploy-prepare.sh
+      - name: Upload application while maintenance is enabled
+        shell: bash
+        run: |
+          rsync -az --protect-args --delay-updates \
+            -e "ssh -i $HOME/.ssh/pluginng_deploy -p $CPANEL_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes" \
+            --exclude='.git/' --exclude='.github/' --exclude='.env*' \
+            --exclude='/.htaccess' --exclude='/.user.ini' --exclude='/php.ini' \
+            --exclude='error_log' --exclude='*.log' --exclude='NNN' --exclude='mmm' \
+            --exclude='*.sql' --exclude='*.sql.gz' --exclude='*.bak' \
+            --exclude='.cpanel.yml' --exclude='.ftp-deploy-sync-state.json' \
+            --exclude='.ftpquota' --exclude='.user.ini' --exclude='php.ini' \
+            --exclude='cookie*.txt' --exclude='node_modules/' --exclude='/vendor/' \
+            --exclude='public/hot' --exclude='public/storage' \
+            --exclude='storage/' --exclude='bootstrap/cache/*.php' \
+            --exclude='tests/' --exclude='phpunit.xml' --exclude='.phpunit.cache/' \
+            ./ "$CPANEL_USER@$CPANEL_HOST:$CPANEL_PATH/"
+          # Replace vendor exactly: stale package classes must not survive a major upgrade.
+          rsync -az --delete --protect-args --delay-updates \
+            -e "ssh -i $HOME/.ssh/pluginng_deploy -p $CPANEL_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes" \
+            vendor/ "$CPANEL_USER@$CPANEL_HOST:$CPANEL_PATH/vendor/"
+      - name: Upgrade authentication, check readiness, and reopen site
+        shell: bash
+        run: |
+          printf -v arguments '%q ' "$CPANEL_PATH" "$CPANEL_PHP"
+          ssh -i "$HOME/.ssh/pluginng_deploy" -p "$CPANEL_PORT" \
+            -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "$CPANEL_USER@$CPANEL_HOST" "bash -s -- $arguments" < scripts/deploy-finish.sh
+      - name: Report failed deployment
+        if: failure()
+        run: echo "::error::If server preparation started, maintenance may still be enabled. Inspect the failed step and follow docs/LARAVEL_13_DEPLOYMENT.md before reopening."
