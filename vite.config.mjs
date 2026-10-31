@@ -11,6 +11,8 @@ const publicSettings = [
 ];
 
 export default defineConfig(({ mode }) => {
+    // Vitest resolves Vite in serve mode, but does not need Laravel's HMR server.
+    const isTest = mode === 'test' || process.env.VITEST === 'true';
     const env = loadEnv(mode, process.cwd(), '');
     const define = Object.fromEntries(publicSettings.map(name => [
         `import.meta.env.VITE_${name}`,
@@ -19,7 +21,7 @@ export default defineConfig(({ mode }) => {
     return {
         define,
         plugins: [
-            laravel({ input: ['resources/js/app.js', 'resources/sass/app.scss'], refresh: ['resources/views/**'] }),
+            !isTest && laravel({ input: ['resources/js/app.js', 'resources/sass/app.scss'], refresh: ['resources/views/**'] }),
             vue({ template: { transformAssetUrls: { base: null, includeAbsolute: false } } }),
         ],
         build: { target: ['es2020', 'safari15'], sourcemap: false },

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse, compileScript, compileTemplate } from '@vue/compiler-sfc';
+import { resolveConfig } from 'vite';
 import viteConfig from '../../vite.config.mjs';
 
 function componentFiles(directory) {
@@ -12,6 +13,17 @@ function componentFiles(directory) {
 }
 
 describe('migration coverage', () => {
+    it('resolves component tests in CI while retaining Laravel for production builds', async () => {
+        vi.stubEnv('CI', 'true');
+        const testing = await resolveConfig({ mode: 'test' }, 'serve');
+        expect(testing.plugins.some(plugin => plugin.name === 'vite:vue')).toBe(true);
+        expect(testing.plugins.some(plugin => plugin.name === 'laravel')).toBe(false);
+
+        vi.stubEnv('VITEST', '');
+        const production = await resolveConfig({ mode: 'production' }, 'build');
+        expect(production.plugins.some(plugin => plugin.name === 'laravel')).toBe(true);
+    });
+
     it('compiles every application SFC with the native Vue 3 compiler', () => {
         const files = componentFiles('resources/js');
         expect(files.length).toBeGreaterThan(60);
