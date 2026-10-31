@@ -149,8 +149,9 @@ export default {
           console.log(data);
           this.buckets = data;
         })
-        .catch(({ response }) => {
-          this.$toasted.show(error.response.data.data);
+        .catch((error) => {
+          const response = { ...error.response, data: error.response?.data || {} };
+          this.$toasted.show(error.response?.data?.message || error.response?.data?.data || 'Request failed. Please try again.');
         });
     },
 

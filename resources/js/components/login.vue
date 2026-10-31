@@ -14,6 +14,9 @@
                   >
                     {{ this.$route.query.result }}
                   </div>
+                  <div v-if="$route.query.session === 'unverified'" class="alert alert-warning" role="alert">
+                    Your login could not be verified. Please sign in again.
+                  </div>
                   <h4>Hello! login to Proceed</h4>
                   <form class="user" @submit.prevent="login">
                     <div class="form-group">

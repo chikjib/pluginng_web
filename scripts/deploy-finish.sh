@@ -9,6 +9,7 @@ test -f storage/framework/down
 
 # Validate the uploaded release before changing database state or reopening.
 "$php_bin" scripts/check-vite-build.php
+"$php_bin" scripts/ensure-auth-header.php
 "$php_bin" -r 'if (is_file("public/hot") && !unlink("public/hot")) { exit(1); }'
 
 # Remove generated manifests from the old framework before Laravel boots.

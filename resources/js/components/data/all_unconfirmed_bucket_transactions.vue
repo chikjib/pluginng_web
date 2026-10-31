@@ -427,8 +427,9 @@ export default {
           this.isloading = false;
           window.location.reload();
         })
-        .catch(({ response }) => {
-          this.$toasted.show(error.response.data.data);
+        .catch((error) => {
+          const response = { ...error.response, data: error.response?.data || {} };
+          this.$toasted.show(error.response?.data?.message || error.response?.data?.data || 'Request failed. Please try again.');
           this.isloading = false;
         });
     },
@@ -464,8 +465,9 @@ export default {
 
           this.isloading = false;
         })
-        .catch(({ response }) => {
-          this.$toasted.show(error.response.data.data);
+        .catch((error) => {
+          const response = { ...error.response, data: error.response?.data || {} };
+          this.$toasted.show(error.response?.data?.message || error.response?.data?.data || 'Request failed. Please try again.');
           this.isloading = false;
         });
       }

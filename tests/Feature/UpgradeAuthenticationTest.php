@@ -191,4 +191,25 @@ class UpgradeAuthenticationTest extends TestCase
         ])->assertJsonPath('success', false);
     }
 
+    public function test_api_401_reports_only_whether_php_received_the_bearer_header(): void
+    {
+        $this->getJson('/api/users/1')->assertUnauthorized()
+            ->assertHeader('X-Auth-Header-Present', '0');
+        Auth::forgetGuards();
+        $this->withToken('invalid-test-token')->getJson('/api/users/1')->assertUnauthorized()
+            ->assertHeader('X-Auth-Header-Present', '1')
+            ->assertExactJson(['message' => 'Unauthenticated.']);
+    }
+
+    public function test_upgrade_check_rejects_a_mismatched_passport_key_pair(): void
+    {
+        config(['app.debug' => false, 'session.driver' => 'file', 'session.files' => $this->keyDirectory]);
+        $this->artisan('passport:hash', ['--force' => true])->assertSuccessful();
+        $this->artisan('upgrade:check')->assertSuccessful();
+        $other = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);
+        File::put($this->keyDirectory.'/oauth-public.key', openssl_pkey_get_details($other)['key']);
+        $this->artisan('upgrade:check')
+            ->expectsOutput('FAIL: Passport signing and verification keys match')->assertFailed();
+    }
+
 }

@@ -31,52 +31,29 @@
 </template>
 
 <script>
-const token = window.localStorage.getItem("token");
-
 export default {
-  name: "InfoCaller",
-
-  mounted() {
-    this.getInfo();
-
-  },
-  methods: {
-
-    getInfo() {
-      var url = `/api/load-home`;
-      this.isloading = true;
-
-      axios
-        .get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then(({ data }) => {
-          const my_bvn = data.data.bvn;
-          const my_nin = data.data.nin;
-          if(my_bvn == null && my_nin == null){
-           $(document).ready(function(){
-            $('#infoModal').modal('show');
-           })
-
-            // this.$router.push("/dashboard/profile")
-        }
-
-          this.isloading = false;
-        })
-        .catch(({ response }) => {
-          this.$toasted.show(error.response.data.data);
-          this.isloading = false;
-        });
+  name: 'InfoCaller',
+  props: { identity: { type: Object, default: () => ({}) } },
+  computed: {
+    needsVerification() {
+      return this.identity?.bvn === null && this.identity?.nin === null;
     },
-    modalClose(){
-        $(document).ready(function(){
-            $('#infoModal').modal('hide')
-        })
-
-    }
+  },
+  watch: {
+    needsVerification: {
+      immediate: true,
+      handler(needed) {
+        if (needed) this.$nextTick(() => this.toggleModal('show'));
+      },
+    },
+  },
+  beforeUnmount() { this.toggleModal('hide'); },
+  methods: {
+    toggleModal(action) {
+      const modal = window.jQuery?.('#infoModal');
+      modal?.modal?.(action);
+    },
+    modalClose() { this.toggleModal('hide'); },
   },
 };
 </script>

@@ -404,7 +404,7 @@ export default {
     },
 
     getusers() {
-      axios
+      return axios
         .get(`/api/users/${this.userdata.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -412,8 +412,10 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response.data.data);
           this.users = response.data.data;
+        })
+        .catch((error) => {
+          if (error.response?.status !== 401) this.$toasted.show(error.response?.data?.message || 'Unable to load your profile. Please try again.');
         });
     },
 

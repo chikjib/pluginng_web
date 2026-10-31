@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Support\PassportKeyPair;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\ClientRepository;
@@ -37,6 +38,7 @@ class CheckUpgradeReadiness extends Command
                 return true;
             },
             'Passport public key can validate tokens' => fn () => app(ResourceServer::class) instanceof ResourceServer,
+            'Passport signing and verification keys match' => fn () => PassportKeyPair::matches(),
             'An existing personal access client is available' => fn () => (bool) app(ClientRepository::class)
                 ->personalAccessClient(config('auth.guards.api.provider')),
             'Existing OAuth client secrets are hashed' => function () {

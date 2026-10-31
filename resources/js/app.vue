@@ -1,5 +1,5 @@
 <template>
-  <router-view> </router-view>
+  <router-view v-if="canRenderRoute"> </router-view>
 </template>
 
 <script>
@@ -9,6 +9,12 @@ export default {
     return {
       loggedUser: this.auth.user,
     };
+  },
+  computed: {
+    canRenderRoute() {
+      const protectedRoute = this.$route.matched.some(record => record.meta.requiresAuth || record.meta.requiresAdmin);
+      return !protectedRoute || Boolean(this.auth.user);
+    },
   },
   methods: {
     logout() {

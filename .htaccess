@@ -1,3 +1,10 @@
+# Pluginng: forward API bearer tokens when the application root serves server.php.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
 <ifmodule mod_rewrite.c>
  
     <ifmodule mod_negotiation.c>

@@ -108,3 +108,39 @@ it('renders transaction amounts and loads the next Laravel resource page', async
     await flushPromises();
     expect(get).toHaveBeenCalledWith('/api/orders?page=2&user=1', expect.any(Object));
 });
+
+import InfoCaller from '../../resources/js/components/InfoCaller.vue';
+import Profile from '../../resources/js/components/settings/Profile.vue';
+
+it('uses dashboard identity data for the verification notice without a duplicate home request', async () => {
+    const get = vi.spyOn(axios, 'get');
+    const modal = vi.fn();
+    vi.stubGlobal('jQuery', vi.fn(() => ({ modal })));
+    const wrapper = mount(InfoCaller, { props: { identity: {} } });
+    await flushPromises();
+    expect(get).not.toHaveBeenCalled();
+    expect(modal).not.toHaveBeenCalledWith('show');
+    await wrapper.setProps({ identity: { bvn: null, nin: 'saved-nin' } });
+    expect(modal).not.toHaveBeenCalledWith('show');
+    await wrapper.setProps({ identity: { bvn: null, nin: null } });
+    await flushPromises();
+    expect(modal).toHaveBeenCalledWith('show');
+});
+
+it('handles a rejected dashboard account lookup without an unhandled promise', async () => {
+    const { wrapper, get } = dashboardScreen({ bvn: null, nin: 'saved-nin' });
+    await flushPromises();
+    get.mockRejectedValueOnce({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+    await expect(wrapper.vm.getUser()).resolves.toBeUndefined();
+    await flushPromises();
+});
+
+it('handles a rejected profile lookup without throwing a second error', async () => {
+    vi.spyOn(axios, 'get').mockRejectedValue({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+    const wrapper = mount(Profile, { global: {
+        mocks: { auth: { user: { id: 1278 } }, $appUrl: 'http://localhost', $toasted: { show: vi.fn() } },
+        stubs: { RouterLink: true },
+    } });
+    await flushPromises();
+    expect(wrapper.vm.users).toEqual({});
+});

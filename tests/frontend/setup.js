@@ -9,6 +9,7 @@ beforeEach(() => {
 });
 afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     vi.unstubAllEnvs();
     vi.useRealTimers();
     document.querySelectorAll('[data-pluginng-toasts]').forEach(element => element.remove());

@@ -35,7 +35,7 @@ if [[ "$1" == artisan && "$2" == up ]]; then rm storage/framework/down; fi
 test('finish checks authentication and caches before reopening', () => {
   const { result, commands, down } = finish();
   assert.equal(result.status, 0, result.stderr);
-  const expected = ['scripts/check-vite-build.php', 'artisan package:discover', 'artisan migrate --force', 'artisan passport:hash --force',
+  const expected = ['scripts/check-vite-build.php', 'scripts/ensure-auth-header.php', 'artisan package:discover', 'artisan migrate --force', 'artisan passport:hash --force',
     'artisan upgrade:check', 'artisan config:cache', 'artisan view:cache', 'artisan queue:restart', 'artisan up'];
   let previous = -1;
   for (const command of expected) {
@@ -100,4 +100,20 @@ test('Vite release check rejects a missing lazy-loaded route asset', () => {
   const result = checkViteFixture(true);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /asset is missing/);
+});
+
+test('Authorization forwarding preserves cPanel handlers and is idempotent', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'pluginng-auth-header-'));
+  const file = path.join(directory, '.htaccess');
+  const original = '# cPanel managed handler\nAddHandler application/x-httpd-ea-php84 .php\n<IfModule mod_rewrite.c>\nRewriteEngine On\nRewriteRule ^ server.php [L]\n</IfModule>\n';
+  fs.writeFileSync(file, original, { mode: 0o640 });
+  const run = () => spawnSync('php', [path.join(root, 'scripts/ensure-auth-header.php'), directory], { encoding: 'utf8' });
+  assert.equal(run().status, 0);
+  const patched = fs.readFileSync(file, 'utf8');
+  assert.ok(patched.includes(original));
+  assert.match(patched, /E=HTTP_AUTHORIZATION:%\{HTTP:Authorization\}/);
+  assert.equal(fs.statSync(file).mode & 0o777, 0o640);
+  assert.equal(run().status, 0);
+  assert.equal(fs.readFileSync(file, 'utf8'), patched);
+  fs.rmSync(directory, { recursive: true, force: true });
 });

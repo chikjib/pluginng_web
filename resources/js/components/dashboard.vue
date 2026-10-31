@@ -4,7 +4,7 @@
   </div>
 
   <div v-else class="row mb-3">
-    <InfoCaller />
+    <InfoCaller :identity="home" />
     <div class="col-md-12">
       <div
         v-if="home.notice != ''"
@@ -926,7 +926,7 @@ export default {
     },
 
     getUser() {
-      axios
+      return axios
         .get(`/api/users/${this.user.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -935,6 +935,9 @@ export default {
         })
         .then((response) => {
           this.latestUser = response.data.data;
+        })
+        .catch((error) => {
+          if (error.response?.status !== 401) this.$toasted.show(error.response?.data?.message || 'Unable to load your account details. Please try again.');
         });
     },
 
@@ -1031,7 +1034,8 @@ export default {
 
           window.location.href = "/dashboard";
         })
-        .catch(({ response }) => {
+        .catch((error) => {
+          const response = { ...error.response, data: error.response?.data || {} };
           this.$toasted.show(response.data.data);
           this.errorflag = response.data.data;
           this.isloading = false;
