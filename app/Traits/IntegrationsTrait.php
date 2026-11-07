@@ -1931,7 +1931,9 @@ trait IntegrationsTrait
                 "phone_number" => $phone,
                 "action" => "vend",
                 "user_reference" => $ref,
-                "bypass_network" => "yes"
+                "bypass_network" => "yes",
+                "async" => false,
+                "callback" => "https://pluginng.com/integrity-portal-webhook"
             ]);
         return $response->json();
     }

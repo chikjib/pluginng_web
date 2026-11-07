@@ -75,6 +75,7 @@ Route::webhooks('vtuplug-webhook', 'vtuplug-webhook');
 Route::webhooks('naijasub-webhook', 'naijasub-webhook');
 Route::webhooks('amakasub-webhook', 'amakasub-webhook');
 Route::webhooks('zoe-data-webhook', 'zoe-data-webhook');
+Route::webhooks('integrity-portal-webhook', 'integrity-portal-webhook');
 Route::webhooks('sim-server-webhook', 'sim-server-webhook');
 
 

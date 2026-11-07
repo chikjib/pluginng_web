@@ -26,6 +26,7 @@ class VerifyCsrfToken extends Middleware
         'naijasub-webhook',
         'amakasub-webhook',
         'zoe-data-webhook',
+        'integrity-portal-webhook',
         'sim-server-webhook',
 
     ];
