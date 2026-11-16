@@ -4867,7 +4867,7 @@ class OrderController extends BaseController
                 
                 }
 
-                else if($subcategory->id == 2 && strtolower($plan) == strtolower("GET 1GB FOR 1 DAY")){
+                else if($subcategory->id == 43 && strtolower($plan) == strtolower("GET 1GB FOR 1 DAY")){
                     $network_id = $this->parseAutoPilotNetworkID(strtolower($network));
                     $product_id = isset($getSelectedProduct->product_id) ? $getSelectedProduct->product_id : null;
                     $variation_code = isset($getSelectedProduct->variation_code) ? $getSelectedProduct->variation_code : null;
