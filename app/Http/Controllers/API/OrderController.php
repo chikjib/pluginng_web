@@ -4985,10 +4985,10 @@ class OrderController extends BaseController
                         $updateOrder->save();
                         $msg1 = $response['data']['transaction']['details'];
                         $msg = $msg1 . " AutoSync Ref: " . $response['data']['transaction']['reference'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->variation_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->variation_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $msg1);
                     }
@@ -7388,10 +7388,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7442,10 +7442,10 @@ class OrderController extends BaseController
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
                         
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7496,10 +7496,10 @@ class OrderController extends BaseController
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
                         
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7549,10 +7549,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7602,10 +7602,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7655,10 +7655,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7708,10 +7708,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7761,10 +7761,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7814,10 +7814,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7867,10 +7867,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -7920,10 +7920,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -8882,10 +8882,10 @@ class OrderController extends BaseController
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
                         
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -9162,10 +9162,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -9215,10 +9215,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -9268,10 +9268,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -9321,10 +9321,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
@@ -9374,10 +9374,10 @@ class OrderController extends BaseController
                         $updateOrder->response = $response['data']['gateway_response'];
                         $updateOrder->save();
                         $msg = $response['data']['gateway_response'] . " TbchPortal Ref: " . $response['data']['customer_ref'];
-                        $this->processReferralRewards($updateOrder);
+                        // $this->processReferralRewards($updateOrder);
     
     
-                        $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
+                        // $this->sendTelegramMessage($amount, $phone, $subcategory->pins, $getSelectedProduct->tbch_code, $ref, $subcategory->telegram, $msg);
     
                         return $this->sendResponse2($ref, $custom_reference, $amountActual, $plan . " Purchase successful", $response['data']['gateway_response']);
                 }
